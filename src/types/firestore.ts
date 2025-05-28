@@ -4,7 +4,7 @@
 import type { Timestamp } from 'firebase/firestore';
 
 export interface Product {
-  id?: string; // Optional: Firestore document ID
+  id?: string;
   name: string;
   description: string;
   specifications?: string;
@@ -19,14 +19,14 @@ export interface Product {
 }
 
 export interface Category {
-  id?: string; // Optional: Firestore document ID
+  id?: string;
   name: string;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }
 
 export interface User {
-  id?: string; // Optional: Firestore document ID (could be Firebase Auth UID)
+  id?: string;
   name: string;
   email: string;
   role: 'admin' | 'manager' | 'seller';
@@ -36,7 +36,7 @@ export interface User {
 }
 
 export interface Supplier {
-  id?: string; // Optional: Firestore document ID
+  id?: string;
   name: string;
   contactName?: string;
   contactEmail?: string;
@@ -58,5 +58,4 @@ export interface Sale {
   items: CartItem[];
   grandTotal: number;
   saleDate: Timestamp; // Firestore Timestamp of when the sale occurred
-  // Potentially add customerId, userId (sellerId) etc. in a more complex system
 }

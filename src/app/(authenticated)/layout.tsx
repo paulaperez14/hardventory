@@ -4,7 +4,7 @@ import React from 'react';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { AppHeader } from '@/components/layout/AppHeader';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'; // Use shadcn sidebar components
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AuthenticatedLayout({
@@ -17,7 +17,6 @@ export default function AuthenticatedLayout({
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
-        {/* Or a more sophisticated loading skeleton for the whole layout */}
         <div className="flex flex-col items-center gap-4">
           <Skeleton className="h-12 w-12 rounded-full" />
           <Skeleton className="h-4 w-48" />

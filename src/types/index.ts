@@ -1,5 +1,5 @@
 
-export type UserRole = 'admin' | 'manager' | 'seller'; // Changed 'vendedor' to 'seller'
+export type UserRole = 'admin' | 'manager' | 'seller';
 
 export interface User {
   id: string;
@@ -33,10 +33,8 @@ export interface Product {
   price: number;
   imageUrl?: string;
   description?: string;
-  // SKU was removed previously, ensure this type reflects current Product fields accurately
   // Consider if 'category' and 'supplier' should be IDs or full objects based on usage.
   // The dashboard and product page likely need IDs then fetch details.
-  // For now, keeping as is from previous state, but flag for review if data display issues arise.
 }
 
 export interface NavItem {

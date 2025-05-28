@@ -24,7 +24,7 @@ export const SIDENAV_ITEMS: NavItem[] = [
     href: '/products',
     label: 'Products',
     icon: Package,
-    roles: MANAGER_ROLES, // Changed from ALL_ROLES
+    roles: MANAGER_ROLES,
   },
   {
     href: '/categories',
