@@ -22,40 +22,34 @@ export const SIDENAV_ITEMS: NavItem[] = [
   },
   {
     href: '/products',
-    label: 'Products',
+    label: 'Productos',
     icon: Package,
-    roles: MANAGER_ROLES, // Changed from ALL_ROLES
+    roles: MANAGER_ROLES,
   },
   {
     href: '/categories',
-    label: 'Categories',
+    label: 'Categorías',
     icon: Tags,
     roles: MANAGER_ROLES,
   },
   {
     href: '/suppliers',
-    label: 'Suppliers',
+    label: 'Proveedores',
     icon: Truck,
     roles: MANAGER_ROLES,
   },
   {
     href: '/users',
-    label: 'User Management',
+    label: 'Gestión de Usuarios',
     icon: Users,
     roles: ADMIN_ONLY,
   },
   {
     href: '/reports',
-    label: 'Reports',
+    label: 'Reportes',
     icon: FileText,
     roles: ADMIN_ONLY,
   },
-  // Example for future settings page
-  // {
-  //   href: '/settings',
-  //   label: 'Settings',
-  //   icon: Settings,
-  //   roles: ALL_ROLES,
-  // },
+
 ];
 
