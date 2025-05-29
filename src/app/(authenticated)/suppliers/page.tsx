@@ -79,45 +79,45 @@ export default function SuppliersPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Supplier Management" description="Manage your product suppliers.">
+      <PageHeader title="Gestión de Proveedores" description="Gestiona los proveedores de los productos.">
         <Button onClick={handleAddClick}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add New Supplier
+          <PlusCircle className="mr-2 h-4 w-4" /> Añadir Proveedor
         </Button>
       </PageHeader>
 
       <Card>
         <CardHeader>
-          <CardTitle>Supplier List</CardTitle>
-          <CardDescription>View, edit, and manage all product suppliers.</CardDescription>
+          <CardTitle>Lista de Proveedores</CardTitle>
+          <CardDescription>Ver, editar, y gestionar todos los proveedores de los productos.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Contact Person</TableHead>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Persona de Contacto</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Teléfono</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center">
-                    Loading suppliers...
+                    Cargando proveedores...
                   </TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-destructive">
-                    Error loading suppliers: {error}
+                    Error cargando proveedores: {error}
                   </TableCell>
                 </TableRow>
               ) : suppliers.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center">
-                    No suppliers found.
+                    No se encontraron proveedores.
                   </TableCell>
                 </TableRow>
               ) : (
@@ -131,13 +131,13 @@ export default function SuppliersPage() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
+                            <span className="sr-only">Abrir menu</span>
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleEditClick(supplier)}>
-                            <Edit className="mr-2 h-4 w-4" /> Edit
+                            <Edit className="mr-2 h-4 w-4" /> Editar
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive focus:bg-destructive/10"
@@ -147,7 +147,7 @@ export default function SuppliersPage() {
                               }
                             }}
                           >
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                            <Trash2 className="mr-2 h-4 w-4" /> Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

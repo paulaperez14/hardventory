@@ -29,7 +29,7 @@ export interface User {
   id?: string;
   name: string;
   email: string;
-  role: 'admin' | 'manager' | 'seller';
+  role: 'admin' | 'bodega' | 'seller';
   createdAt?: Timestamp;
   avatar?: string; // Optional: URL to the user's avatar image
   updatedAt?: Timestamp;
