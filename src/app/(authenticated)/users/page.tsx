@@ -23,7 +23,7 @@ import UserForm from '@/components/forms/UserForm'; // For editing
 
 const roleBadges: Record<UserRole, { text: string; icon: React.ElementType; variant: "default" | "secondary" | "outline" | "destructive" | null | undefined }> = {
   admin: { text: 'Admin', icon: ShieldCheck, variant: 'destructive' },
-  manager: { text: 'Manager', icon: ShieldAlert, variant: 'default' },
+  bodega: { text: 'Bodega', icon: ShieldAlert, variant: 'default' },
   seller: { text: 'Seller', icon: UserCheck, variant: 'secondary' },
 };
 
@@ -271,7 +271,7 @@ export default function UsersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="seller">Seller</SelectItem>
-                  <SelectItem value="manager">Manager</SelectItem>
+                  <SelectItem value="bodega">Bodega</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
                 </SelectContent>
               </Select>

@@ -69,7 +69,7 @@ export default function ReportsPage() {
       const data = await getSalesByDateRange(dateRange.from, dateRange.to);
       setSalesData(data);
     } catch (e: any) {
-      setError(`Failed to generate report: ${e.message}`);
+      setError(`Error al generar reporte: ${e.message}`);
       console.error(e);
     } finally {
       setLoading(false);
@@ -78,24 +78,24 @@ export default function ReportsPage() {
 
   const downloadPdf = () => {
     if (flattenedSalesData.length === 0) {
-        alert("No data to download."); // Or use a toast
+        alert("No hay datos para descargar."); // Or use a toast
         return;
     }
     const doc = new jsPDF();
-    const reportTitle = `Sales Report (${format(dateRange?.from || new Date(), 'P')} - ${format(dateRange?.to || new Date(), 'P')})`;
+    const reportTitle = `Informe de Ventas (${format(dateRange?.from || new Date(), 'P')} - ${format(dateRange?.to || new Date(), 'P')})`;
     
     doc.setFontSize(18);
     doc.text(reportTitle, 14, 22);
     
     autoTable(doc, {
       startY: 30,
-      head: [['Product Name', 'Quantity Sold', 'Unit Price', 'Subtotal', 'Sale Date']],
+      head: [['Nombre Producto', 'Cantidad Vendida', 'Precio Unitario', 'Subtotal', 'Fecha de Venta']],
       body: flattenedSalesData.map(item => [
         item.productName,
         item.quantity,
         `$${item.unitPrice.toFixed(2)}`,
         `$${item.subtotal.toFixed(2)}`,
-        item.saleDate instanceof Timestamp ? format(item.saleDate.toDate(), 'PPp') : 'Invalid Date'
+        item.saleDate instanceof Timestamp ? format(item.saleDate.toDate(), 'PPp') : 'Fecha no válida'
       ]),
       theme: 'striped',
       headStyles: { fillColor: [41, 128, 185] }, // Example styling: a moderate blue
@@ -106,7 +106,7 @@ export default function ReportsPage() {
   if (authLoading) {
     return (
       <div className="flex flex-col gap-6 p-4 md:p-6 lg:p-8">
-        <PageHeader title="Sales Reports" description="Generating reports of sales activity." />
+        <PageHeader title="Reportes de Ventas" description="Generación de informes de actividad de ventas." />
         <Skeleton className="h-12 w-1/4" /> 
         <Skeleton className="h-64 w-full" />
       </div>
@@ -116,7 +116,7 @@ export default function ReportsPage() {
   if (!user || user.role !== 'admin') {
     return (
          <div className="flex flex-col gap-6 p-4 md:p-6 lg:p-8">
-            <PageHeader title="Access Denied" description="You do not have permission to view this page." />
+            <PageHeader title="Acceso Denegado" description="No tiene permiso para ver esta página." />
         </div>
     );
   }
@@ -124,16 +124,16 @@ export default function ReportsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Sales Reports" description="Generate and download sales reports for specific periods.">
+      <PageHeader title="Reportes de Ventas" description="Genere y descargue informes de ventas para periodos específicos.">
         <Button onClick={downloadPdf} disabled={flattenedSalesData.length === 0 || loading} variant="outline">
-          <Download className="mr-2 h-4 w-4" /> Download PDF
+          <Download className="mr-2 h-4 w-4" /> Descargar PDF
         </Button>
       </PageHeader>
 
       <Card>
         <CardHeader>
-          <CardTitle>Report Configuration</CardTitle>
-          <CardDescription>Select a date range to generate the sales report.</CardDescription>
+          <CardTitle>Configuración del Reporte</CardTitle>
+          <CardDescription>Seleccione un intervalo de fechas para generar el informe de ventas.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <Popover>
@@ -153,7 +153,7 @@ export default function ReportsPage() {
                     format(dateRange.from, 'LLL dd, y')
                   )
                 ) : (
-                  <span>Pick a date range</span>
+                  <span>Elija un rango de fechas</span>
                 )}
               </Button>
             </PopoverTrigger>
@@ -170,7 +170,7 @@ export default function ReportsPage() {
           </Popover>
           <Button onClick={handleGenerateReport} disabled={loading}>
             <BarChart2 className="mr-2 h-4 w-4" />
-            {loading ? 'Generating...' : 'Generate Report'}
+            {loading ? 'Generando...' : 'Generar Reporte'}
           </Button>
         </CardContent>
       </Card>
@@ -188,7 +188,7 @@ export default function ReportsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Report Results</CardTitle>
+          <CardTitle>Resultados del Reporte</CardTitle>
           <CardDescription>
             {flattenedSalesData.length > 0 
                 ? `Displaying ${flattenedSalesData.length} line items sold for the selected period.`

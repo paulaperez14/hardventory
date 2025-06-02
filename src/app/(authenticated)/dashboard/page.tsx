@@ -78,13 +78,13 @@ export default function DashboardPage() {
     </>
   );
 
-  const renderManagerDashboard = () => (
+  const renderBodegaDashboard = () => (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Products" value={products.length} icon={Package} />
-        <StatCard title="Low Stock Items" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Action required' : 'All good'}`} />
-        <StatCard title="Total Categories" value={categories.length} icon={Tags} />
-        <StatCard title="Total Suppliers" value={suppliers.length} icon={Truck} />
+        <StatCard title="Total Productos" value={products.length} icon={Package} />
+        <StatCard title="Items con Bajo Stock" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Action required' : 'All good'}`} />
+        <StatCard title="Total Categorias" value={categories.length} icon={Tags} />
+        <StatCard title="Total Proveedores" value={suppliers.length} icon={Truck} />
       </div>
     </>
   );
@@ -102,7 +102,7 @@ export default function DashboardPage() {
     if (loadingData) {
       return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {[...Array(user?.role === 'admin' ? 5 : user?.role === 'manager' ? 4 : 2)].map((_, i) => (
+          {[...Array(user?.role === 'admin' ? 5 : user?.role === 'bodega' ? 4 : 2)].map((_, i) => (
             <Skeleton key={i} className="h-[120px] w-full" />
           ))}
         </div>
@@ -115,12 +115,12 @@ export default function DashboardPage() {
     switch (user?.role) {
       case 'admin':
         return renderAdminDashboard();
-      case 'manager':
-        return renderManagerDashboard();
+      case 'bodega':
+        return renderBodegaDashboard();
       case 'seller':
         return renderSellerDashboard();
       default:
-        return <p>No dashboard view available for your role, or data is still loading.</p>;
+        return <p>No hay dashboard disponible para su rol, o los datos aún se están cargando.</p>;
     }
   };
 
@@ -135,9 +135,9 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-6 w-6" />
-              Low Stock Alerts
+              Alertas de Stock Bajo
             </CardTitle>
-            <CardDescription>Loading low stock product information...</CardDescription>
+            <CardDescription>Cargando información sobre productos con bajo stock...</CardDescription>
           </CardHeader>
           <CardContent>
             <Skeleton className="h-[100px] w-full" />
@@ -150,9 +150,9 @@ export default function DashboardPage() {
            <CardHeader>
              <CardTitle className="flex items-center gap-2 text-destructive">
                <AlertTriangle className="h-6 w-6" />
-               Low Stock Alerts
+               Alertas de Stock Bajo
              </CardTitle>
-             <CardDescription>Could not load low stock product information due to an error.</CardDescription>
+             <CardDescription>No se ha podido cargar la información de productos con bajo stock debido a un error.</CardDescription>
            </CardHeader>
          </Card>
       )}
@@ -162,19 +162,19 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-6 w-6" />
-              Low Stock Alerts
+              Alertas de Stock Bajo
             </CardTitle>
-            <CardDescription>These products are running low on stock and may need reordering.</CardDescription>
+            <CardDescription>Las existencias de estos productos se están agotando y es posible que haya que volver a pedirlos.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[80px]">Image</TableHead>
-                  <TableHead>Product Name</TableHead>
-                  <TableHead className="text-right">Quantity</TableHead>
-                  <TableHead className="text-right">Threshold</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="w-[80px]">Imagen</TableHead>
+                  <TableHead>Nombre Producto</TableHead>
+                  <TableHead className="text-right">Cantidad Actual</TableHead>
+                  <TableHead className="text-right">Cantidad Mínima</TableHead>
+                  <TableHead className="text-center">Estado</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -194,7 +194,7 @@ export default function DashboardPage() {
                     <TableCell className="text-right text-destructive font-semibold">{product.quantity}</TableCell>
                     <TableCell className="text-right">{product.lowStockThreshold}</TableCell>
                     <TableCell className="text-center">
-                      <Badge variant="destructive">Low Stock</Badge>
+                      <Badge variant="destructive">Stock Bajo</Badge>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -208,9 +208,9 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package className="h-6 w-6 text-green-500" /> {/* Using green for "all good" */}
-              Low Stock Alerts
+              Alertas de Stock Bajo
             </CardTitle>
-            <CardDescription>All products are sufficiently stocked. Great job!</CardDescription>
+            <CardDescription>Todos los productos tienen suficiente stock. Excelente!</CardDescription>
           </CardHeader>
         </Card>
       )}

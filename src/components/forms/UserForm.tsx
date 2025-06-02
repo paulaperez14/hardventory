@@ -114,7 +114,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="seller">Seller</SelectItem>
-            <SelectItem value="manager">Manager</SelectItem>
+            <SelectItem value="bodega">Bodega</SelectItem>
             <SelectItem value="admin">Admin</SelectItem>
           </SelectContent>
         </Select>

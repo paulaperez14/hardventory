@@ -76,37 +76,37 @@ export default function CategoriesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Categories Management">
+      <PageHeader title="Gestión de Categorías">
          <Button onClick={handleAddClick}>
-            <PlusCircle className="mr-2 h-4 w-4" /> Add New Category
+            <PlusCircle className="mr-2 h-4 w-4" /> Añadir Categoría
           </Button>
       </PageHeader>
 
       <Card>
         <CardHeader>
-          <CardTitle>Category List</CardTitle>
-          <CardDescription>View, edit, and manage all product categories.</CardDescription>
+          <CardTitle>Lista de Categorías</CardTitle>
+          <CardDescription>Ver, editar, y gestionar todas las categorías de los productos.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Nombre</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={2} className="text-center">Loading categories...</TableCell>
+                  <TableCell colSpan={2} className="text-center">Cargando categorías...</TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
-                  <TableCell colSpan={2} className="text-center text-destructive">Error loading categories: {error}</TableCell>
+                  <TableCell colSpan={2} className="text-center text-destructive">Error cargando categorías: {error}</TableCell>
                 </TableRow>
               ) : categories.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={2} className="text-center">No categories found.</TableCell>
+                  <TableCell colSpan={2} className="text-center">No se encontraron categorías.</TableCell>
                 </TableRow>
               ) : (
                 categories.map((category) => (
@@ -116,13 +116,13 @@ export default function CategoriesPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Open menu</span>
+                          <span className="sr-only">Abrir menu</span>
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleEditClick(category)}>
-                          <Edit className="mr-2 h-4 w-4" /> Edit
+                          <Edit className="mr-2 h-4 w-4" /> Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive focus:bg-destructive/10"
@@ -130,7 +130,7 @@ export default function CategoriesPage() {
                             if (category.id) handleDeleteClick(category.id);
                           }}
                         >
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          <Trash2 className="mr-2 h-4 w-4" /> Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
