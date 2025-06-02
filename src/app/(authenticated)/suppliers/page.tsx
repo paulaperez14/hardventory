@@ -170,7 +170,7 @@ export default function SuppliersPage() {
             </DialogDescription>
           </DialogHeader>
           {/* Removed top padding from this div wrapper, reduced DialogContent grid gap handles it */}
-          <div className="pb-4 max-h-[70vh] overflow-y-auto pr-2"> 
+          <div className="p-2 max-h-[70vh] overflow-y-auto"> 
             <SupplierForm supplier={selectedSupplier} onSuccess={handleFormSuccess} />
           </div>
         </DialogContent>
