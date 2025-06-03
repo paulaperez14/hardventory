@@ -1,7 +1,7 @@
 'use client';
 
 import type { User as AppUserType } from '@/types'; // Renamed to avoid clash with Firebase User
-import type { User as FirestoreUser } from '@/types/firestore';
+// import type { User as FirestoreUser } from '@/types/firestore';
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { getStoredUser, setStoredUser } from '@/lib/authStore';
 import { auth as firebaseAuth } from '@/lib/firebase'; // Import Firebase auth instance
