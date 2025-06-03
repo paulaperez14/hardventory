@@ -347,9 +347,15 @@ export default function PointOfSalePage() {
                 <p className="text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
                 <p className="text-sm font-medium">Stock: <span className={product.quantity < product.lowStockThreshold ? "text-orange-600 font-bold" : "text-foreground"}>{product.quantity}</span></p>
               </div>
-              {product.supplierId && supplierMap.has(product.supplierId) && (
-                <p className="text-xs text-muted-foreground mb-3">Proveedor: {supplierMap.get(product.supplierId)}</p>
-              )}
+
+              <p className="text-xs text-muted-foreground mb-3">
+                Proveedor: {
+                  product.supplierId && supplierMap.has(product.supplierId)
+                    ? supplierMap.get(product.supplierId)
+                    : "Sin Proveedor"
+                }
+              </p>
+              
             </CardContent>
             <CardFooter className="p-4 border-t">
               <Button 

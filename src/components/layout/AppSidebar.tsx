@@ -50,7 +50,7 @@ export function AppSidebar() {
         <SidebarMenu>
           {visibleNavItems.map((item) => (
             <SidebarMenuItem key={item.label}>
-              <Link href={item.href} passHref legacyBehavior>
+              <Link href={item.href} passHref >
                 <SidebarMenuButton
                   isActive={pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))}
                   tooltip={{ children: item.label, side: 'right', className: 'ml-2' }}
@@ -63,7 +63,7 @@ export function AppSidebar() {
                 <SidebarMenuSub>
                   {item.subItems.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.label}>
-                       <Link href={subItem.href} passHref legacyBehavior>
+                       <Link href={subItem.href} passHref >
                         <SidebarMenuSubButton isActive={pathname === subItem.href}>
                           <subItem.icon />
                           <span>{subItem.label}</span>
@@ -78,9 +78,6 @@ export function AppSidebar() {
         </SidebarMenu>
         </ScrollArea>
       </SidebarContent>
-      {/* <SidebarFooter className="p-4 mt-auto border-t border-sidebar-border">
-        User Profile / Logout could go here if not in header
-      </SidebarFooter> */}
     </Sidebar>
   );
 }
