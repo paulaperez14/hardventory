@@ -192,14 +192,14 @@ export default function ProductsPage() {
   
       {/* Product Form Dialog */}
       <Dialog open={showProductForm} onOpenChange={setShowProductForm}>
-        <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-xl"> {/* Adjusted width */}
+        <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-xl">
           <DialogHeader>
             <DialogTitle>{selectedProduct ? 'Editar Producto' : 'Añadir Producto'}</DialogTitle>
             <DialogDescription>
               {selectedProduct ? 'Actualice los datos de este producto.' : 'Rellene los datos para añadir un nuevo producto al inventario.'}
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4 max-h-[70vh] overflow-y-auto pr-2"> {/* Added scroll for long forms */}
+          <div className="p-2 max-h-[70vh] overflow-y-auto">
             <ProductForm 
               product={selectedProduct} 
               categories={allCategories}
