@@ -19,20 +19,20 @@ interface ProductFormProps {
   onSuccess?: () => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], suppliers = [], onSuccess }) => {
-  const initialFormData: Partial<Product> = {
-    name: '',
-    description: '',
-    specifications: '',
-    price: 0,
-    categoryId: '',
-    supplierId: '',
-    quantity: 0,
-    lowStockThreshold: 5,
-    imageUrl: '',
-  };
+const initialFormData: Partial<Product> & { categoryId?: string; supplierId?: string } = {
+  name: '',
+  description: '',
+  specifications: '',
+  price: 0,
+  categoryId: '', // Use empty string for unselected state
+  supplierId: '', // Use empty string for unselected state
+  quantity: 0,
+  lowStockThreshold: 5,
+  imageUrl: '',
+};
 
-  const [formData, setFormData] = useState<Partial<Product>>(initialFormData);
+const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], suppliers = [], onSuccess }) => {
+  const [formData, setFormData] = useState<Partial<Product> & { categoryId?: string; supplierId?: string }>(initialFormData);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -41,38 +41,38 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+
   useEffect(() => {
-    if (product) {
-      setFormData({
-        name: product.name || '',
-        description: product.description || '',
-        specifications: product.specifications || '',
-        price: typeof product.price === 'number' ? product.price : (initialFormData.price || 0),
-        categoryId: product.categoryId || '',
-        supplierId: product.supplierId || '',
-        quantity: typeof product.quantity === 'number' ? product.quantity : (initialFormData.quantity || 0),
-        lowStockThreshold: product.lowStockThreshold || 5,
-        imageUrl: product.imageUrl || '',
-      });
-      if (product.imageUrl) {
-        setPreviewUrl(product.imageUrl);
-      } else {
-        setPreviewUrl(null);
-      }
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+    // console.log('[ProductForm useEffect] Received product prop:', JSON.stringify(product));
+    // console.log('[ProductForm useEffect] Received categories prop:', JSON.stringify(categories));
+    // console.log('[ProductForm useEffect] Received suppliers prop:', JSON.stringify(suppliers));
+
+
+    if (product && product.id) {
+      const newFormData = {
+        name: product.name ?? '',
+        description: product.description ?? '',
+        specifications: product.specifications ?? '',
+        price: product.price ?? 0,
+        categoryId: product.categoryId || '', // Ensure empty string if null/undefined
+        supplierId: product.supplierId || '', // Ensure empty string if null/undefined
+        quantity: product.quantity ?? 0,
+        lowStockThreshold: product.lowStockThreshold ?? 5,
+        imageUrl: product.imageUrl ?? '',
+      };
+      setFormData(newFormData);
+      console.log('[ProductForm useEffect] Set formData for EDIT:', JSON.stringify(newFormData));
+      setPreviewUrl(product.imageUrl || null);
     } else {
       setFormData(initialFormData);
+      console.log('[ProductForm useEffect] Set formData to initialFormData for NEW product.');
       setPreviewUrl(null);
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product]);
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }, [product, categories, suppliers]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -85,29 +85,33 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
 
   const clearSelectedFile = () => {
     setSelectedFile(null);
-    setPreviewUrl(product?.imageUrl || null); 
+    setPreviewUrl(product?.imageUrl || null);
     if (fileInputRef.current) {
-        fileInputRef.current.value = ""; 
+        fileInputRef.current.value = "";
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prevFormData => ({
+      ...prevFormData,
       [name]: name === 'price' || name === 'quantity' || name === 'lowStockThreshold' ? parseFloat(value) || 0 : value,
-    });
-    if (name === 'imageUrl' && value) { 
-        setSelectedFile(null);
-        setPreviewUrl(value);
+    }));
+    if (name === 'imageUrl') { 
+        setSelectedFile(null); 
+        setPreviewUrl(value || null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ""; 
+        }
     }
   };
-  
+
   const handleSelectChange = (name: string, value: string) => {
-    setFormData({
-      ...formData,
+    console.log(`[ProductForm handleSelectChange] name: ${name}, value: "${value}"`);
+    setFormData(prevFormData => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -139,41 +143,42 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
           const errorData = await presignedUrlResponse.json();
           throw new Error(errorData.error || 'Failed to get pre-signed URL from server.');
         }
-        
-        // La API devuelve `url` para PUT y `s3ObjectUrl` directamente
+
         const { url, s3ObjectUrl } = await presignedUrlResponse.json();
 
         if (!url || !s3ObjectUrl) {
             throw new Error('Pre-signed URL or S3 Object URL not received from server.');
         }
-        
-        // Sube archivo a S3 usando la URL PUT pre-firmada
-        const uploadResponse = await fetch(url, { 
+
+        const uploadResponse = await fetch(url, {
             method: 'PUT',
             body: selectedFile,
             headers: { 'Content-Type': selectedFile.type }
         });
 
         if (!uploadResponse.ok) {
-            let errorDetails = `S3 Upload failed (PUT). Status: ${uploadResponse.status}.`;
+            let detailedMessage = `S3 Upload failed. Status: ${uploadResponse.status}.`;
             try {
                 const s3ErrorText = await uploadResponse.text();
                 if (s3ErrorText) {
-                    errorDetails += ` Response: ${s3ErrorText}`;
+                    detailedMessage += ` Response: ${s3ErrorText}`;
                 }
-            } catch (e) {
-                // Ignorar si no se puede leer la respuesta de texto
+            } catch (readError) {
+                // Ignore if can't read text response from S3 error
             }
-            throw new Error(errorDetails);
+             if (uploadResponse.status === 403) {
+                detailedMessage += " This could be a CORS issue on the S3 bucket or IAM permission problem.";
+            }
+            throw new Error(detailedMessage);
         }
-        
-        finalImageUrl = s3ObjectUrl; 
-        toast({ title: "Imagen Subida", description: "La imagen se ha subido correctamente." });
+
+        finalImageUrl = s3ObjectUrl;
+        toast({ title: "Imagen Subida", description: "La imagen se ha subido correctamente a S3." });
       } catch (uploadError: any) {
-        console.error('Error al momento de subir la imágen:', uploadError);
+        console.error('Error during image upload process:', uploadError);
         let detailedMessage = uploadError.message;
-        if (uploadError instanceof TypeError && uploadError.message.toLowerCase().includes("no se pudo obtener")) {
-          detailedMessage = "Error al obtener la imágen. Esto puede deberse a problemas de red o a la configuración CORS en el bucket S3. Asegúrate de que el bucket de S3 permite solicitudes PUT desde este origen y comprueba la consola del navegador para obtener más detalles.";
+         if (uploadError instanceof TypeError && uploadError.message.toLowerCase().includes("failed to fetch")) {
+          detailedMessage = "Failed to fetch. This might be due to network issues or CORS configuration on the S3 bucket. Please ensure the S3 bucket allows PUT requests from this origin and check browser console for more details.";
         }
         setError(`Error al subir imagen: ${detailedMessage}`);
         toast({ variant: "destructive", title: "Error de Subida", description: `Error al subir imagen: ${detailedMessage}`, duration: 9000 });
@@ -184,27 +189,27 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
       setIsUploading(false);
     }
 
+
     try {
-      const dataToSave: Omit<Product, 'id' | 'createdAt' | 'updatedAt' | 'sku'> = { 
+      const dataToSave: Omit<Product, 'id' | 'createdAt' | 'updatedAt'> = {
         name: formData.name!,
         description: formData.description || '',
         specifications: formData.specifications || '',
-        price: formData.price!,
+        price: typeof formData.price === 'number' ? formData.price : 0,
         categoryId: formData.categoryId!,
-        supplierId: formData.supplierId! === '' ? undefined : formData.supplierId!,
-        quantity: formData.quantity === undefined ? 0 : formData.quantity,
-        lowStockThreshold: formData.lowStockThreshold === undefined ? 5 : formData.lowStockThreshold,
+        supplierId: formData.supplierId || '',
+        quantity: typeof formData.quantity === 'number' ? formData.quantity : 0,
+        lowStockThreshold: typeof formData.lowStockThreshold === 'number' ? formData.lowStockThreshold : 5,
         imageUrl: finalImageUrl,
       };
 
-
       if (product && product.id) {
         await updateProduct(product.id, dataToSave);
-        toast({ title: "Producto Actualizado", description: `${formData.name} ha sido actualizado.` });
+        toast({ title: "Producto Actualizado", description: `${dataToSave.name} ha sido actualizado.` });
       } else {
         await addProduct(dataToSave as Product);
-        toast({ title: "Producto Añadido", description: `${formData.name} ha sido añadido.` });
-        setFormData(initialFormData); 
+        toast({ title: "Producto Añadido", description: `${dataToSave.name} ha sido añadido.` });
+        setFormData(initialFormData);
         setPreviewUrl(null);
         setSelectedFile(null);
         if(fileInputRef.current) fileInputRef.current.value = "";
@@ -221,7 +226,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
     }
   };
 
-  const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex items-center justify-between"; 
+const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex items-center justify-between";
   const labelClassName = "block text-sm font-medium"; 
 
   return (
@@ -296,7 +301,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className={inputClassName + " file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"}
+          className={inputClassName + " file:mr-4 file:py-1 file:px-4 file:rounded-full file:font-semibold file:bg-primary file:text-primary-foreground"}
           ref={fileInputRef}
           disabled={isUploading}
         />
