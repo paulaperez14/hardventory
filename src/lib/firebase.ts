@@ -43,4 +43,4 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 // Export Firestore and Auth instances
-export { db, auth };
+export { db, auth, app };

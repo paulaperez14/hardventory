@@ -9,7 +9,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.821.0",
@@ -66,6 +68,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
+    "cypress": "^13.17.0",
     "cypress-file-upload": "^5.0.8",
     "genkit-cli": "^1.8.0",
     "postcss": "^8",
