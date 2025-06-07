@@ -24,13 +24,13 @@ export default function LoginPage() {
     try {
       const user = await login(email, password);
       if (user) {
-        toast({ title: 'Login Successful', description: `Welcome back, ${user.name}!` });
+        toast({ title: 'Inicio de Sesión Exitoso', description: `Bienvenido, ${user.name}!` });
         router.push('/dashboard');
       } else {
-        toast({ title: 'Login Failed', description: 'Invalid email or password.', variant: 'destructive' });
+        toast({ title: 'Error de Inicio de Sesión', description: 'Email o Contraseña Incorrecta.', variant: 'destructive' });
       }
     } catch (error) {
-      toast({ title: 'Login Error', description: (error as Error).message, variant: 'destructive' });
+      toast({ title: 'Error de Inicio de Sesión', description: (error as Error).message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -43,8 +43,8 @@ export default function LoginPage() {
           <div className="mx-auto mb-4">
             <AppLogo className="h-12 w-auto text-primary" />
           </div>
-          <CardTitle className="text-3xl font-bold">Hardventory Login</CardTitle>
-          <CardDescription>Enter your credentials to access your account</CardDescription>
+          <CardTitle className="text-3xl font-bold">Inicio de Sesión a Hardventory</CardTitle>
+          <CardDescription>Introduzca sus credenciales para acceder a su cuenta</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -71,7 +71,7 @@ export default function LoginPage() {
               />
             </div>
             <Button type="submit" className="w-full text-lg py-6" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
           </form>
            {/* <div className="mt-6 text-center text-sm text-muted-foreground">

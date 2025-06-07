@@ -21,22 +21,22 @@ describe('Authentication Flows', () => {
     cy.visit(loginUrl);
     cy.get('input#email').clear().type(managerEmail);
     cy.get('input#password').clear().type(correctPassword);
-    cy.get('button[type="submit"]').contains('Login').click();
+    cy.get('button[type="submit"]').contains('Iniciar Sesión').click();
 
     cy.url({ timeout: 10000 }).should('include', dashboardUrl);
-    cy.contains('Welcome,', { timeout: 10000 }).should('be.visible');
+    cy.contains('Bienvenido,', { timeout: 10000 }).should('be.visible');
   });
 
   it('should show "Correo electrónico o contraseña no válidos." for wrong credentials and stay on login page', () => {
     cy.visit(loginUrl);
     cy.get('input#email').clear().type('wrong@stockpilot.com');
     cy.get('input#password').clear().type('wrongpassword');
-    cy.get('button[type="submit"]').contains('Login').click();
+    cy.get('button[type="submit"]').contains('Iniciar Sesión').click();
 
     // Check for the toast message
     cy.contains('Correo electrónico o contraseña no válidos.', { timeout: 10000 }).should('be.visible');
     cy.url().should('include', loginUrl);
-    cy.contains('Welcome,').should('not.exist'); // Ensure not redirected
+    cy.contains('Bienvenido,').should('not.exist'); // Ensure not redirected
   });
 
   it('should allow a logged-in user to logout and redirect to login page', () => {
@@ -45,7 +45,7 @@ describe('Authentication Flows', () => {
     cy.visit(dashboardUrl); // Visit a page to ensure the header with logout is present
 
     // Wait for dashboard to fully load to ensure avatar button is present
-    cy.contains('Welcome,', { timeout: 10000 }).should('be.visible');
+    cy.contains('Bienvenido,', { timeout: 10000 }).should('be.visible');
 
     // Perform logout
     // This selector targets the user avatar button; it might need adjustment if the UI changes.
@@ -58,7 +58,7 @@ describe('Authentication Flows', () => {
     // Verify session is cleared by trying to access dashboard again
     cy.visit(dashboardUrl, { failOnStatusCode: false });
     cy.url({ timeout: 10000 }).should('include', loginUrl);
-    cy.contains('Hardventory Login').should('be.visible'); // Check for login page content
+    cy.contains('Inicio de Sesión a Hardventory').should('be.visible'); // Check for login page content
   });
 
   it('should indicate an invalid email format on the login form', () => {
@@ -71,12 +71,12 @@ describe('Authentication Flows', () => {
 
     // Optionally, attempt to "submit" and verify behavior
     cy.get('input#password').clear().type(correctPassword); // Fill password to allow form submission attempt
-    cy.get('button[type="submit"]').contains('Login').click();
+    cy.get('button[type="submit"]').contains('Iniciar Sesión').click();
 
     // We should remain on the login page because the browser should prevent submission
     cy.url().should('include', loginUrl);
     // And no login-related toasts should appear
-    cy.contains('Invalid email or password.').should('not.exist');
-    cy.contains('Login Successful').should('not.exist');
+    cy.contains('Email o Contraseña Incorrecta..').should('not.exist');
+    cy.contains('Inicio de Sesión Exitoso').should('not.exist');
   });
 });
