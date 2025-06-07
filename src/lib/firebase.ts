@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApp, getApps } from "firebase/app"; // Added getApp, getApps
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -15,7 +15,26 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app;
+if (!getApps().length) {
+  // Check if all required Firebase config keys are present
+  if (
+    !firebaseConfig.apiKey ||
+    !firebaseConfig.authDomain ||
+    !firebaseConfig.projectId ||
+    !firebaseConfig.storageBucket ||
+    !firebaseConfig.messagingSenderId ||
+    !firebaseConfig.appId
+  ) {
+    console.error("Firebase configuration is missing or incomplete. Check your NEXT_PUBLIC_FIREBASE_ environment variables. Some Firebase features may not work.");
+    // Removed: throw new Error("Firebase configuration environment variables are not fully set.");
+  }
+  // We still attempt to initialize even if some vars are missing,
+  // Firebase SDK will handle specific errors if calls are made with bad config.
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp(); // if already initialized, use that one
+}
 
 // Get a Firestore instance
 const db = getFirestore(app);
