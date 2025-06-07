@@ -14,7 +14,7 @@ describe('Gestión de productos - Add Product', () => {
 
   beforeEach(() => {
     cy.login('admin@stockpilot.com', 'password');
-    cy.visit('http://localhost:9002/products');
+    cy.visit('http://localhost:3000/products');
     cy.contains('Gestión de productos', { timeout: 10000 }).should('be.visible');
   });
 
@@ -43,7 +43,7 @@ describe('Gestión de productos - Add Product', () => {
     cy.contains('Producto Añadido', { timeout: 20000 }).should('be.visible');
 
     // --- VIEW PRODUCT IN LIST ---
-    cy.visit('http://localhost:9002/products'); 
+    cy.visit('http://localhost:3000/products'); 
     cy.contains('td', uniqueProductName, { timeout: 10000 }).should('be.visible');
     cy.contains('td', uniqueProductName)
       .parent('tr')

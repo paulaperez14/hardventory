@@ -1,8 +1,8 @@
 describe('Authentication Flows', () => {
   const managerEmail = 'manager@stockpilot.com';
   const correctPassword = 'password';
-  const dashboardUrl = 'http://localhost:9002/dashboard';
-  const loginUrl = 'http://localhost:9002/login';
+  const dashboardUrl = 'http://localhost:3000/dashboard';
+  const loginUrl = 'http://localhost:3000/login';
 
   beforeEach(() => {
     // Clear any session cookies or local storage before each test

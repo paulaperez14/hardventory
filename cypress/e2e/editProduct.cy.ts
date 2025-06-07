@@ -14,7 +14,7 @@ describe('Gestión de productos - Editar Producto', () => {
 
   beforeEach(() => {
     cy.login('admin@stockpilot.com', 'password');
-    cy.visit('http://localhost:9002/products');
+    cy.visit('http://localhost:3000/products');
     cy.contains('Gestión de productos', { timeout: 10000 }).should('be.visible');
 
     // --- ADD A PRODUCT TO EDIT ---
@@ -35,7 +35,7 @@ describe('Gestión de productos - Editar Producto', () => {
     cy.contains('button', 'Añadir Producto').click();
     cy.contains('Producto Añadido', { timeout: 20000 }).should('be.visible');
 
-    cy.visit('http://localhost:9002/products'); // Go back to product list to ensure it's there
+    cy.visit('http://localhost:3000/products'); // Go back to product list to ensure it's there
     cy.contains('td', initialProductName, { timeout: 10000 }).should('be.visible');
   });
 
@@ -80,7 +80,7 @@ describe('Gestión de productos - Editar Producto', () => {
     cy.contains('Producto Actualizado', { timeout: 10000 }).should('be.visible');
 
     // --- VIEW EDITED PRODUCT IN LIST ---
-    cy.visit('http://localhost:9002/products');
+    cy.visit('http://localhost:3000/products');
     cy.contains('td', editedProductName, { timeout: 10000 }).should('be.visible');
     cy.contains('td', editedProductName)
       .parent('tr')

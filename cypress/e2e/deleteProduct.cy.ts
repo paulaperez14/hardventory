@@ -11,7 +11,7 @@ describe('Gestión de productos - Eliminar Producto', () => {
 
   beforeEach(() => {
     cy.login('admin@stockpilot.com', 'password');
-    cy.visit('http://localhost:9002/products');
+    cy.visit('http://localhost:3000/products');
     cy.contains('Gestión de productos', { timeout: 10000 }).should('be.visible');
 
     // --- ADD A PRODUCT TO DELETE ---
@@ -53,7 +53,7 @@ cy.contains('button', 'Añadir Nuevo Producto').click();
     cy.contains('Producto eliminado correctamente!', { timeout: 10000 }).should('be.visible');
 
     // --- VERIFY PRODUCT IS DELETED ---
-    cy.visit('http://localhost:9002/products');
+    cy.visit('http://localhost:3000/products');
     cy.contains('td', productNameToDelete, { timeout: 10000 }).should('not.exist');
   });
 });
