@@ -23,7 +23,7 @@ jobs:
           # Command to run Cypress tests
           command: npm run cypress:run
           # URL to wait for before starting tests
-          wait-on: 'http://localhost:9002'
+          wait-on: 'http://localhost:3000'
           # How long to wait for the app to start (optional)
           wait-on-timeout: 120 # in seconds
         env:
