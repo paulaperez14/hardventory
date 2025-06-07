@@ -1,3 +1,4 @@
+import 'cypress-file-upload';
 
 describe('Gestión de productos - Eliminar Producto', () => {
   const testProductNameBase = 'Cypress Delete Test Product';

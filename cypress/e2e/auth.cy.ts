@@ -71,7 +71,7 @@ describe('Authentication Flows', () => {
 
     // Optionally, attempt to "submit" and verify behavior
     cy.get('input#password').clear().type(correctPassword); // Fill password to allow form submission attempt
-    cy.get('button[type="submit"]').contains('Inicio de Sesión').click();
+    cy.get('button[type="submit"]').contains('Iniciar Sesión').click();
 
     // We should remain on the login page because the browser should prevent submission
     cy.url().should('include', loginUrl);

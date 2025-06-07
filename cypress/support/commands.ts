@@ -17,7 +17,7 @@ Cypress.Commands.add('login', (email, password) => {
     cy.contains('Inicio de Sesión', { timeout: 10000 }).should('be.visible'); // Wait for the login page to load
     cy.get('input#email').type(email);
     cy.get('input#password').type(password);
-    cy.get('button[type="submit"]').contains('Inicio de Sesión').click();
+    cy.get('button[type="submit"]').contains('Iniciar Sesión').click();
     cy.url().should('include', 'http://localhost:9002/dashboard'); // Verify redirection
     cy.contains('Bienvenido,').should('be.visible'); // A simple check that dashboard has loaded
   }, {
