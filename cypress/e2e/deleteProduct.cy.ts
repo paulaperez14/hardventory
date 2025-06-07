@@ -31,7 +31,7 @@ cy.contains('button', 'Añadir Nuevo Producto').click();
     cy.contains('button', 'Añadir Producto').click();
     cy.contains('Producto Añadido', { timeout: 20000 }).should('be.visible');
 
-    cy.visit('http://localhost:9002/products'); // Go back to product list
+    cy.visit('http://localhost:3000/products'); // Go back to product list
     cy.contains('td', productNameToDelete, { timeout: 10000 }).should('be.visible');
   });
 
