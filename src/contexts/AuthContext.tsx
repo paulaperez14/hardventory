@@ -1,7 +1,6 @@
 'use client';
 
 import type { User as AppUserType } from '@/types'; // Renamed to avoid clash with Firebase User
-// import type { User as FirestoreUser } from '@/types/firestore';
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { getStoredUser, setStoredUser } from '@/lib/authStore';
 import { auth as firebaseAuth } from '@/lib/firebase'; // Import Firebase auth instance
@@ -99,9 +98,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error: any) {
       setIsLoading(false);
       console.error('Login failed:', error);
-      // Firebase errors often have a 'code' property, e.g., 'auth/user-not-found', 'auth/wrong-password'
-      // You might want to provide more specific error messages based on error.code
-      throw new Error(error.message || 'Invalid email or password.');
+      let errorMessage = 'Se ha producido un error inesperado durante el inicio de sesión.';
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+          case 'auth/invalid-credential':
+          case 'auth/invalid-email':
+          case 'auth/user-disabled':
+          case 'auth/too-many-requests':
+            errorMessage = 'Correo electrónico o contraseña no válidos.';
+            break;
+          default:
+            // For other Firebase errors, you might still want to show a generic message
+            // or log the specific error.message for debugging but show generic to user.
+            errorMessage = 'Correo electrónico o contraseña no válidos.'; // Keep it generic for unknown auth errors too
+            // console.error("Unhandled Firebase Auth Error Code:", error.code, error.message);
+        }
+      } else {
+        // Non-Firebase errors, or Firebase errors without a 'code'
+        errorMessage = error.message || 'Correo electrónico o contraseña no válidos.';
+      }
+      throw new Error(errorMessage);
     }
   }, []);
 

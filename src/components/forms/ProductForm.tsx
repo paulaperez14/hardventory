@@ -43,49 +43,48 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
 
 
   useEffect(() => {
-    // console.log('[ProductForm useEffect] Received product prop:', JSON.stringify(product));
-    // console.log('[ProductForm useEffect] Received categories prop:', JSON.stringify(categories));
-    // console.log('[ProductForm useEffect] Received suppliers prop:', JSON.stringify(suppliers));
-
-
-    if (product && product.id) {
+    console.log('[ProductForm useEffect] Received product prop:', product ? JSON.stringify(product) : 'undefined');
+    if (product && product.id) { // Editing an existing product
       const newFormData = {
         name: product.name ?? '',
         description: product.description ?? '',
         specifications: product.specifications ?? '',
         price: product.price ?? 0,
-        categoryId: product.categoryId || '', // Ensure empty string if null/undefined
-        supplierId: product.supplierId || '', // Ensure empty string if null/undefined
+        categoryId: product.categoryId || '',
+        supplierId: product.supplierId || '',
         quantity: product.quantity ?? 0,
         lowStockThreshold: product.lowStockThreshold ?? 5,
         imageUrl: product.imageUrl ?? '',
       };
       setFormData(newFormData);
-      console.log('[ProductForm useEffect] Set formData for EDIT:', JSON.stringify(newFormData));
       setPreviewUrl(product.imageUrl || null);
-    } else {
+      console.log('[ProductForm useEffect] Set formData for EDIT:', JSON.stringify(newFormData));
+    } else { // Adding a new product or product prop became undefined (e.g., form reset by parent key change)
       setFormData(initialFormData);
-      console.log('[ProductForm useEffect] Set formData to initialFormData for NEW product.');
       setPreviewUrl(null);
+      console.log('[ProductForm useEffect] Set formData to initialFormData for NEW product or RESET.');
     }
+    // Always clear file input when product context changes (edit <-> add, or different product for edit)
+    // This is important because the parent component uses a 'key' prop to force re-mounts/resets,
+    // and this effect runs after that re-mount.
     setSelectedFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-  }, [product, categories, suppliers]);
+  }, [product]); // Depend ONLY on product. Categories/suppliers are for select options, not form data reset.
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
-      setFormData(prev => ({ ...prev, imageUrl: '' })); 
+      setFormData(prev => ({ ...prev, imageUrl: '' }));
     }
   };
 
   const clearSelectedFile = () => {
     setSelectedFile(null);
-    setPreviewUrl(product?.imageUrl || null);
+    setPreviewUrl(product?.imageUrl || null); // Revert to original product image if editing, or null if adding
     if (fileInputRef.current) {
         fileInputRef.current.value = "";
     }
@@ -97,11 +96,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
       ...prevFormData,
       [name]: name === 'price' || name === 'quantity' || name === 'lowStockThreshold' ? parseFloat(value) || 0 : value,
     }));
-    if (name === 'imageUrl') { 
-        setSelectedFile(null); 
+    if (name === 'imageUrl') {
+        setSelectedFile(null);
         setPreviewUrl(value || null);
         if (fileInputRef.current) {
-          fileInputRef.current.value = ""; 
+          fileInputRef.current.value = "";
         }
     }
   };
@@ -209,13 +208,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
       } else {
         await addProduct(dataToSave as Product);
         toast({ title: "Producto Añadido", description: `${dataToSave.name} ha sido añadido.` });
-        setFormData(initialFormData);
-        setPreviewUrl(null);
-        setSelectedFile(null);
-        if(fileInputRef.current) fileInputRef.current.value = "";
+        // No need to reset formData here explicitly, parent `key` change or `onSuccess` should handle form state.
+        // Or, if onSuccess doesn't close the dialog, then:
+        // setFormData(initialFormData);
+        // setPreviewUrl(null);
+        // setSelectedFile(null);
+        // if(fileInputRef.current) fileInputRef.current.value = "";
       }
       if (onSuccess) {
-        onSuccess();
+        onSuccess(); // This typically closes the dialog and might trigger a re-fetch & re-keying of the form if it were to reopen.
       }
     } catch (err: any) {
       console.error('Error saving product:', err);
@@ -226,63 +227,75 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories = [], sup
     }
   };
 
-const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex items-center justify-between";
-  const labelClassName = "block text-sm font-medium"; 
+  const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex items-center justify-between";
+  const labelClassName = "block text-sm font-medium";
+
+  const categoryValueForSelect = categories.find(c => c.id === formData.categoryId) ? formData.categoryId : '';
+  const supplierValueForSelect = suppliers.find(s => s.id === formData.supplierId) ? formData.supplierId : '';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Label htmlFor="name" className={labelClassName}>Nombre del Producto</Label>
-        <Input id="name" name="name" value={formData.name || ''} onChange={handleChange} required className={inputClassName} />
+        <Input id="name" name="name" value={formData.name ?? ''} onChange={handleChange} required className={inputClassName} />
       </div>
       <div>
         <Label htmlFor="description" className={labelClassName}>Descripción</Label>
-        <Textarea id="description" name="description" value={formData.description || ''} onChange={handleChange} className={inputClassName} />
+        <Textarea id="description" name="description" value={formData.description ?? ''} onChange={handleChange} className={inputClassName} />
       </div>
       <div>
         <Label htmlFor="specifications" className={labelClassName}>Especificaciones del Producto</Label>
-        <Textarea 
-          id="specifications" 
-          name="specifications" 
-          value={formData.specifications || ''} 
-          onChange={handleChange} 
-          placeholder="e.g., Material: Acero, Dimensiones: 10x5x2 cm, Peso: 0.5kg" 
-          className={inputClassName} 
+        <Textarea
+          id="specifications"
+          name="specifications"
+          value={formData.specifications ?? ''}
+          onChange={handleChange}
+          placeholder="e.g., Material: Acero, Dimensiones: 10x5x2 cm, Peso: 0.5kg"
+          className={inputClassName}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="price" className={labelClassName}>Precio</Label>
-          <Input type="number" id="price" name="price" value={formData.price || 0} onChange={handleChange} required step="0.01" className={inputClassName} />
+          <Input type="number" id="price" name="price" value={formData.price ?? 0} onChange={handleChange} required step="0.01" className={inputClassName} />
         </div>
         <div>
           <Label htmlFor="quantity" className={labelClassName}>Cantidad</Label>
-          <Input type="number" id="quantity" name="quantity" value={formData.quantity || 0} onChange={handleChange} required className={inputClassName} />
+          <Input type="number" id="quantity" name="quantity" value={formData.quantity ?? 0} onChange={handleChange} required className={inputClassName} />
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="categoryId" className={labelClassName}>Categoría</Label>
-          <Select name="categoryId" value={formData.categoryId || ''} onValueChange={(value) => handleSelectChange('categoryId', value)} required>
+          <Select
+            name="categoryId"
+            value={categoryValueForSelect || ''}
+            onValueChange={(value) => handleSelectChange('categoryId', value)}
+            required
+          >
             <SelectTrigger className={inputClassName} id="categoryId">
               <SelectValue placeholder="Seleccionar categoría" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map(cat => cat.id && cat.id.trim() !== '' && (
-                <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+              {categories.map(cat => (
+                cat.id && <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div>
           <Label htmlFor="supplierId" className={labelClassName}>Proveedor</Label>
-          <Select name="supplierId" value={formData.supplierId || ''} onValueChange={(value) => handleSelectChange('supplierId', value)}>
+          <Select
+            name="supplierId"
+            value={supplierValueForSelect || ''}
+            onValueChange={(value) => handleSelectChange('supplierId', value)}
+          >
             <SelectTrigger className={inputClassName} id="supplierId">
               <SelectValue placeholder="Sin Proveedor" />
             </SelectTrigger>
             <SelectContent>
-              {suppliers.map(sup => sup.id && sup.id.trim() !== '' && (
-                <SelectItem key={sup.id} value={sup.id}>{sup.name}</SelectItem>
+              {suppliers.map(sup => (
+                sup.id && <SelectItem key={sup.id} value={sup.id}>{sup.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -290,18 +303,18 @@ const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex ite
       </div>
       <div>
         <Label htmlFor="lowStockThreshold" className={labelClassName}>Cantidad Bajo Stock</Label>
-        <Input type="number" id="lowStockThreshold" name="lowStockThreshold" value={formData.lowStockThreshold || 0} onChange={handleChange} required className={inputClassName} />
+        <Input type="number" id="lowStockThreshold" name="lowStockThreshold" value={formData.lowStockThreshold ?? 5} onChange={handleChange} required className={inputClassName} />
       </div>
-      
+
       <div>
         <Label htmlFor="productImageFile" className={labelClassName}>Subir Imagen del Producto</Label>
-        <Input 
-          id="productImageFile" 
-          name="productImageFile" 
+        <Input
+          id="productImageFile"
+          name="productImageFile"
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className={inputClassName + " file:mr-4 file:py-1 file:px-4 file:rounded-full file:font-semibold file:bg-primary file:text-primary-foreground"}
+          className={inputClassName + " file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"}
           ref={fileInputRef}
           disabled={isUploading}
         />
@@ -317,12 +330,12 @@ const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex ite
 
       <div>
         <Label htmlFor="imageUrl" className={labelClassName}>URL de la Imagen del Producto (si no sube una)</Label>
-        <Input 
-          id="imageUrl" 
-          name="imageUrl" 
-          placeholder="https://placehold.co/300x200.png" 
-          value={formData.imageUrl || ''} 
-          onChange={handleChange} 
+        <Input
+          id="imageUrl"
+          name="imageUrl"
+          placeholder="https://placehold.co/300x200.png"
+          value={formData.imageUrl ?? ''}
+          onChange={handleChange}
           className={inputClassName}
           disabled={!!selectedFile || isUploading}
         />
@@ -331,10 +344,10 @@ const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex ite
       {(previewUrl || formData.imageUrl) && (
         <div className="mt-4">
           <Label className={labelClassName}>Vista Previa de la Imagen:</Label>
-          <div className="mt-2 relative w-32 h-32 border rounded-md flex items-center justify-center overflow-hidden">
-            <Image 
-                src={previewUrl || formData.imageUrl || "https://placehold.co/128x128.png"} 
-                alt="Vista previa del producto" 
+          <div className="mt-2 relative w-32 h-32 border rounded-md flex items-center justify-center overflow-hidden bg-muted/30">
+            <Image
+                src={previewUrl || formData.imageUrl || "https://placehold.co/128x128.png"}
+                alt="Vista previa del producto"
                 fill
                 style={{ objectFit: 'contain' }}
                 className="rounded-md"
@@ -354,8 +367,9 @@ const inputClassName = "w-full h-10 px-3 py-2 border rounded-md text-sm flex ite
         </div>
       )}
 
-      <Button type="submit" disabled={loading} className="w-full">
-        {loading ? 'Guardando...' : (product && product.id) ? 'Actualizar Producto' : 'Añadir Producto'}
+
+      <Button type="submit" disabled={loading || isUploading} className="w-full">
+        {isUploading ? 'Subiendo Imagen...' : loading ? 'Guardando...' : (product && product.id) ? 'Actualizar Producto' : 'Añadir Producto'}
       </Button>
       {error && <p className="text-sm text-destructive mt-2">{error}</p>}
     </form>

@@ -17,6 +17,7 @@ import { getCategories } from '@/lib/categories';
 import { getSuppliers } from '@/lib/suppliers';
 import type { Product, Category, Supplier } from '@/types/firestore';
 import ProductForm from '@/components/forms/ProductForm';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -32,6 +33,7 @@ export default function ProductsPage() {
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [allSuppliers, setAllSuppliers] = useState<Supplier[]>([]);
   const [categoryMap, setCategoryMap] = useState<Map<string, string>>(new Map());
+  const { toast } = useToast();
 
   const fetchPageData = useCallback(async () => {
     setLoading(true);
@@ -74,7 +76,7 @@ export default function ProductsPage() {
   const handleFormSuccess = () => {
     setShowProductForm(false);
     setSelectedProduct(undefined);
-    fetchPageData(); // Refresh the list
+    fetchPageData();
   };
 
   const handleDeleteClick = (productId: string) => {
@@ -86,9 +88,17 @@ export default function ProductsPage() {
     if (productToDeleteId) {
       try {
         await deleteProduct(productToDeleteId);
+        toast({
+          title: 'Producto eliminado correctamente!',
+        });
         fetchPageData(); // Refresh the list
       } catch (e: any) {
-        setError(`Failed to delete product: ${e.message}`);
+        setError(`Error al eliminar producto: ${e.message}`);
+        toast({
+          title: 'Error al eliminar producto',
+          description: e.message || 'Ocurrió un error inesperado.',
+          variant: 'destructive',
+        });
       } finally {
         setShowDeleteConfirmModal(false);
         setProductToDeleteId(null);
@@ -98,28 +108,28 @@ export default function ProductsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Product Management" description="Manage your product inventory.">
+      <PageHeader title="Gestión de productos" description="Gestione su inventario de productos.">
         <Button onClick={handleAddClick}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add New Product
+          <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Producto
         </Button>
       </PageHeader>
 
       <Card>
         <CardHeader>
-          <CardTitle>Product List</CardTitle>
-          <CardDescription>View, edit, and manage all products.</CardDescription>
+          <CardTitle>Lista de Productos</CardTitle>
+          <CardDescription>Ver, editar y gestionar todos los productos.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[80px]">Image</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-right">Price</TableHead>
-                <TableHead className="text-right">Quantity</TableHead>
-                <TableHead className="text-center">Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[80px]">Imagen</TableHead>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Categoría</TableHead>
+                <TableHead className="text-right">Precio</TableHead>
+                <TableHead className="text-right">Cantidad</TableHead>
+                <TableHead className="text-center">Estado</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -154,9 +164,9 @@ export default function ProductsPage() {
                     <TableCell className="text-right">{product.quantity}</TableCell>
                     <TableCell className="text-center">
                       {product.quantity === 0 ? (
-                        <Badge variant="destructive">Out of Stock</Badge>
+                        <Badge variant="destructive">Agotado</Badge>
                       ) : product.quantity < (product.lowStockThreshold || 0) ? (
-                        <Badge variant="destructive">Low Stock</Badge>
+                        <Badge variant="destructive">Bajo Stock</Badge>
                       ) : (
                         <Badge variant="secondary" className="text-green-600 bg-green-100 border-green-200">In Stock</Badge>
                       )}
@@ -164,20 +174,20 @@ export default function ProductsPage() {
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
+                          <Button variant="ghost" className="h-8 w-8 p-0" aria-label="Open menu">
+                            <span className="sr-only">Abrir menú</span>
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleEditClick(product)}>
-                            <Edit className="mr-2 h-4 w-4" /> Edit
+                            <Edit className="mr-2 h-4 w-4" /> Editar
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive focus:bg-destructive/10"
                             onClick={() => handleDeleteClick(product.id!)}
                           >
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                            <Trash2 className="mr-2 h-4 w-4" /> Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

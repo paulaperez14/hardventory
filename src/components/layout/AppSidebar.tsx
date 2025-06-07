@@ -15,7 +15,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
 import { SIDENAV_ITEMS } from '@/lib/constants';
 import type { NavItem, UserRole } from '@/types';
 import { useAuth } from '@/hooks/useAuth';

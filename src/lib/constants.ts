@@ -1,6 +1,6 @@
 
 import type { NavItem, UserRole } from '@/types';
-import { LayoutDashboard, Package, Tags, Truck, Users, FileText, Settings, ShoppingCart } from 'lucide-react';
+import { LayoutDashboard, Package, Tags, Truck, Users, FileText, ShoppingCart, ArchiveRestore } from 'lucide-react';
 
 export const ALL_ROLES: UserRole[] = ['admin', 'bodega', 'seller'];
 export const BODEGA_ROLES: UserRole[] = ['admin', 'bodega'];
@@ -39,6 +39,12 @@ export const SIDENAV_ITEMS: NavItem[] = [
     roles: BODEGA_ROLES,
   },
   {
+    href: '/goods-receipts',
+    label: 'Entradas de Mercancías',
+    icon: ArchiveRestore,
+    roles: BODEGA_ROLES,
+  },
+  {
     href: '/users',
     label: 'Gestión de Usuarios',
     icon: Users,
@@ -50,6 +56,4 @@ export const SIDENAV_ITEMS: NavItem[] = [
     icon: FileText,
     roles: ADMIN_ONLY,
   },
-
 ];
-

@@ -31,7 +31,7 @@ export interface User {
   email: string;
   role: 'admin' | 'bodega' | 'seller';
   createdAt?: Timestamp;
-  avatar?: string; // Optional: URL to the user's avatar image
+  avatar?: string;
   updatedAt?: Timestamp;
 }
 
@@ -57,5 +57,19 @@ export interface Sale {
   id?: string; // Firestore document ID
   items: CartItem[];
   grandTotal: number;
-  saleDate: Timestamp; // Firestore Timestamp of when the sale occurred
+  saleDate: string; // Firestore Timestamp of when the sale occurred - Converted to string for client
+}
+
+export interface GoodsReceipt {
+  id?: string; // Firestore document ID
+  productId: string;
+  productName: string; // Denormalized for easier display
+  supplierId?: string;
+  supplierName?: string; // Denormalized for easier display
+  quantityReceived: number;
+  invoiceNumber?: string; // Or order reference
+  receiptDate: string; // Date of entry - Converted to string for client
+  recordedAt?: string; // Timestamp of when the record was created - Converted to string for client
+  userId?: string; // Optional: ID of the user who recorded the receipt
+  userName?: string; // Optional: Name of the user
 }
