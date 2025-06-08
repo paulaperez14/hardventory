@@ -122,7 +122,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
       
       <div className="flex justify-end gap-2 mt-4">
         <Button variant="outline" type="button" onClick={onSuccess} disabled={loading}>
-          Cancel
+          Cancelar
         </Button>
         <Button type="submit" disabled={loading}>
           {loading ? 'Actualizando...' : 'Actualizar Usuario'}

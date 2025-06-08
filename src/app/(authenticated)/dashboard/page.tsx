@@ -126,7 +126,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={`Bienvenido, ${user?.name || 'User'}!`} description={`Aquí tiene un resumen para su ${user?.role || ''} rol.`} />
+      <PageHeader title={`Bienvenido, ${user?.name || 'User'}!`} description={`Aquí tiene un resumen para su rol de ${user?.role || ''}.`} />
       
       {renderDashboardContent()}
 
