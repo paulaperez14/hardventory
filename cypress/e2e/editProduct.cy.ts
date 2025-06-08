@@ -1,6 +1,6 @@
 import 'cypress-file-upload';
 
-describe('Gestión de productos - Editar Producto', () => {
+describe('Gestión de Productos - Editar Producto', () => {
   const testProductNameBase = 'Cypress Edit Test Product';
   const timestamp = Date.now();
   const initialProductName = `${testProductNameBase} Inicial ${timestamp}`;
@@ -15,7 +15,7 @@ describe('Gestión de productos - Editar Producto', () => {
   beforeEach(() => {
     cy.login('admin@stockpilot.com', 'password');
     cy.visit('http://localhost:3000/products');
-    cy.contains('Gestión de productos', { timeout: 10000 }).should('be.visible');
+    cy.contains('Gestión de Productos', { timeout: 10000 }).should('be.visible');
 
     // --- ADD A PRODUCT TO EDIT ---
     cy.contains('button', 'Añadir Nuevo Producto').click();

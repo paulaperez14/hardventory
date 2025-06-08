@@ -1,6 +1,6 @@
 import 'cypress-file-upload';
 
-describe('Gestión de productos - Eliminar Producto', () => {
+describe('Gestión de Productos - Eliminar Producto', () => {
   const testProductNameBase = 'Cypress Delete Test Product';
   const timestamp = Date.now();
   const productNameToDelete = `${testProductNameBase} ${timestamp}`;
@@ -12,7 +12,7 @@ describe('Gestión de productos - Eliminar Producto', () => {
   beforeEach(() => {
     cy.login('admin@stockpilot.com', 'password');
     cy.visit('http://localhost:3000/products');
-    cy.contains('Gestión de productos', { timeout: 10000 }).should('be.visible');
+    cy.contains('Gestión de Productos', { timeout: 10000 }).should('be.visible');
 
     // --- ADD A PRODUCT TO DELETE ---
 cy.contains('button', 'Añadir Nuevo Producto').click();
