@@ -43,7 +43,7 @@ export default function DashboardPage() {
         setCategories(categoriesData);
         setSuppliers(suppliersData);
       } catch (e: any) {
-        setDataError('Failed to load dashboard data. ' + e.message);
+        setDataError('Error al cargar los datos del dashboard. ' + e.message);
         console.error(e);
       } finally {
         setLoadingData(false);
@@ -55,7 +55,7 @@ export default function DashboardPage() {
   if (!user && loadingData) { // Still waiting for auth user and dashboard data
     return (
        <div className="flex flex-col gap-6 p-4 md:p-6 lg:p-8">
-        <PageHeader title="Welcome!" description="Loading your dashboard..." />
+        <PageHeader title="Bienvenido!" description="Cargando su dashboard..." />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {[...Array(5)].map((_, i) => ( <Skeleton key={i} className="h-[120px] w-full" /> ))}
         </div>
@@ -69,11 +69,11 @@ export default function DashboardPage() {
   const renderAdminDashboard = () => (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        <StatCard title="Total Users" value={allUsers.length} icon={Users} />
-        <StatCard title="Total Products" value={products.length} icon={Package} />
-        <StatCard title="Low Stock Items" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Action required' : 'All good'}`} />
-        <StatCard title="Total Categories" value={categories.length} icon={Tags} />
-        <StatCard title="Total Suppliers" value={suppliers.length} icon={Truck} />
+        <StatCard title="Total Usuarios" value={allUsers.length} icon={Users} />
+        <StatCard title="Total Productos" value={products.length} icon={Package} />
+        <StatCard title="Productos con Bajo Stock" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Acción requerida' : 'Todo bien'}`} />
+        <StatCard title="Total Categorías" value={categories.length} icon={Tags} />
+        <StatCard title="Total Proveedores" value={suppliers.length} icon={Truck} />
       </div>
     </>
   );
@@ -82,18 +82,18 @@ export default function DashboardPage() {
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Total Productos" value={products.length} icon={Package} />
-        <StatCard title="Items con Bajo Stock" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Action required' : 'All good'}`} />
+        <StatCard title="Productos con Bajo Stock" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Acción requerida' : 'Todo bien'}`} />
         <StatCard title="Total Categorias" value={categories.length} icon={Tags} />
         <StatCard title="Total Proveedores" value={suppliers.length} icon={Truck} />
       </div>
     </>
   );
 
-  const renderSellerDashboard = () => (
+  const renderVendedorDashboard = () => (
     <>
       <div className="grid gap-4 md:grid-cols-2">
-        <StatCard title="Total Products" value={products.length} icon={Package} />
-        <StatCard title="Low Stock Items" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Action required' : 'All good'}`} />
+        <StatCard title="Total Productos" value={products.length} icon={Package} />
+        <StatCard title="Productos con Bajo Stock" value={lowStockProducts.length} icon={AlertTriangle} description={`${lowStockProducts.length > 0 ? 'Acción requerida' : 'Todo bien'}`} />
       </div>
     </>
   );
@@ -117,8 +117,8 @@ export default function DashboardPage() {
         return renderAdminDashboard();
       case 'bodega':
         return renderBodegaDashboard();
-      case 'seller':
-        return renderSellerDashboard();
+      case 'vendedor':
+        return renderVendedorDashboard();
       default:
         return <p>No hay dashboard disponible para su rol, o los datos aún se están cargando.</p>;
     }

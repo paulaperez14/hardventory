@@ -2,10 +2,10 @@
 import type { NavItem, UserRole } from '@/types';
 import { LayoutDashboard, Package, Tags, Truck, Users, FileText, ShoppingCart, ArchiveRestore } from 'lucide-react';
 
-export const ALL_ROLES: UserRole[] = ['admin', 'bodega', 'seller'];
+export const ALL_ROLES: UserRole[] = ['admin', 'bodega', 'vendedor'];
 export const BODEGA_ROLES: UserRole[] = ['admin', 'bodega'];
 export const ADMIN_ONLY: UserRole[] = ['admin'];
-export const SELLER_AND_ADMIN_ROLES: UserRole[] = ['admin', 'seller'];
+export const VENDEDOR_AND_ADMIN_ROLES: UserRole[] = ['admin', 'vendedor'];
 
 export const SIDENAV_ITEMS: NavItem[] = [
   {
@@ -18,7 +18,7 @@ export const SIDENAV_ITEMS: NavItem[] = [
     href: '/point-of-sale',
     label: 'Punto de Venta',
     icon: ShoppingCart,
-    roles: SELLER_AND_ADMIN_ROLES,
+    roles: VENDEDOR_AND_ADMIN_ROLES,
   },
   {
     href: '/products',

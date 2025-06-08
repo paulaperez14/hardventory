@@ -14,8 +14,8 @@ export const addUser = async (user: User) => {
     const { id, ...userData } = user; // Separate id from the rest of the data
 
     // Ensure role is one of the allowed UserRole types, default if not.
-    const validRoles: UserRole[] = ['admin', 'bodega', 'seller'];
-    const finalRole: UserRole = userData.role && validRoles.includes(userData.role as UserRole) ? userData.role as UserRole : 'seller';
+    const validRoles: UserRole[] = ['admin', 'bodega', 'vendedor'];
+    const finalRole: UserRole = userData.role && validRoles.includes(userData.role as UserRole) ? userData.role as UserRole : 'vendedor';
 
     const dataToSet = {
       ...userData,

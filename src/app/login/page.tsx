@@ -78,8 +78,8 @@ export default function LoginPage() {
             <p>Demo accounts:</p>
             <ul className="list-disc list-inside">
               <li>admin@stockpilot.com (admin)</li>
-              <li>bodega@stockpilot.com (bodega)</li>
-              <li>seller@stockpilot.com (seller)</li>
+              <li>manager@stockpilot.com (bodega)</li>
+              <li>seller@stockpilot.com (vendedor)</li>
             </ul>
             <p className="mt-1">Password: password</p>
           </div> */}

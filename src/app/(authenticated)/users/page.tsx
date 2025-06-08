@@ -24,7 +24,7 @@ import UserForm from '@/components/forms/UserForm'; // For editing
 const roleBadges: Record<UserRole, { text: string; icon: React.ElementType; variant: "default" | "secondary" | "outline" | "destructive" | null | undefined }> = {
   admin: { text: 'Admin', icon: ShieldCheck, variant: 'destructive' },
   bodega: { text: 'Bodega', icon: ShieldAlert, variant: 'default' },
-  seller: { text: 'Seller', icon: UserCheck, variant: 'secondary' },
+  vendedor: { text: 'Vendedor', icon: UserCheck, variant: 'secondary' },
 };
 
 export default function UsersPage() {
@@ -51,7 +51,7 @@ export default function UsersPage() {
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [newUserRole, setNewUserRole] = useState<UserRole>('seller');
+  const [newUserRole, setNewUserRole] = useState<UserRole>('vendedor');
 
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState<FirestoreUser | null>(null);
@@ -68,7 +68,7 @@ export default function UsersPage() {
       setUsers(data);
     } catch (e: any) {
       setError(e.message);
-      toast({ title: "Error", description: `Failed to fetch users: ${e.message}`, variant: "destructive" });
+      toast({ title: "Error", description: `Error al recuperar usuarios: ${e.message}`, variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ export default function UsersPage() {
   const handleCreateUser = async () => {
     setCreateError(null);
     if (newPassword.length < 6) {
-      setCreateError("Password should be at least 6 characters long.");
+      setCreateError("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
     try {
@@ -96,16 +96,16 @@ export default function UsersPage() {
 
       setShowAddUserModal(false);
       fetchUsers();
-      toast({ title: "User Created", description: `${newName} has been successfully added.` });
+      toast({ title: "Usario Creado", description: `${newName} se ha añadido correctamente.` });
 
       // Reset form fields
       setNewName('');
       setNewEmail('');
       setNewPassword('');
-      setNewUserRole('seller');
+      setNewUserRole('vendedor');
     } catch (e: any) {
       setCreateError(e.message);
-      toast({ title: "Creation Failed", description: e.message, variant: "destructive" });
+      toast({ title: "Creación fallida", description: e.message, variant: "destructive" });
     }
   };
 
@@ -119,10 +119,10 @@ export default function UsersPage() {
       try {
         await deleteUser(userToDeleteId); // This only deletes from Firestore
         fetchUsers();
-        toast({ title: "User Deleted", description: "User has been removed from the database." });
+        toast({ title: "Usuario Eliminado", description: "El usuario ha sido eliminado de la base de datos." });
       } catch (e: any) {
-        setError(`Error deleting user: ${e.message}`);
-        toast({ title: "Deletion Failed", description: e.message, variant: "destructive" });
+        setError(`Error al borrar usuario: ${e.message}`);
+        toast({ title: "Eliminación fallida", description: e.message, variant: "destructive" });
       } finally {
         setShowConfirmDeleteModal(false);
         setUserToDeleteId(null);
@@ -139,14 +139,14 @@ export default function UsersPage() {
     setShowEditUserModal(false);
     setEditingUser(null);
     fetchUsers();
-    toast({ title: "User Updated", description: "User details have been successfully updated." });
+    toast({ title: "Usuario Actualizado", description: "Los datos del usuario se han actualizado correctamente." });
   };
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="User Management" description="Manage user accounts and roles.">
+      <PageHeader title="Gestión de Usuarios" description="Gestionar las cuentas y roles de los usuarios.">
         <Button onClick={() => setShowAddUserModal(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add New User
+          <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Usuario
         </Button>
       </PageHeader>
 
@@ -158,28 +158,28 @@ export default function UsersPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>User List</CardTitle>
-          <CardDescription>View, edit, and manage all user accounts.</CardDescription>
+          <CardTitle>Lista de Usuarios</CardTitle>
+          <CardDescription>Ver, editar y gestionar todas las cuentas de usuario.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[60px]">Avatar</TableHead>
-                <TableHead>Name</TableHead>
+                <TableHead>Nombre</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Rol</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">Loading users...</TableCell>
+                  <TableCell colSpan={5} className="text-center">Cargando usuarios...</TableCell>
                 </TableRow>
               ) : users.length === 0 && !error ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">No users found.</TableCell>
+                  <TableCell colSpan={5} className="text-center">No se encontraron usuarios.</TableCell>
                 </TableRow>
               ) : (
                 users.map((user) => {
@@ -208,13 +208,13 @@ export default function UsersPage() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
+                              <span className="sr-only">Abrir menú</span>
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => handleEditClick(user)}>
-                              <Edit className="mr-2 h-4 w-4" /> Edit User
+                              <Edit className="mr-2 h-4 w-4" /> Editar Usuario
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive focus:text-destructive focus:bg-destructive/10"
@@ -224,7 +224,7 @@ export default function UsersPage() {
                                 }
                               }}
                             >
-                              <Trash2 className="mr-2 h-4 w-4" /> Delete User
+                              <Trash2 className="mr-2 h-4 w-4" /> Eliminar Usuario
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -242,9 +242,9 @@ export default function UsersPage() {
       <Dialog open={showAddUserModal} onOpenChange={(isOpen) => { setShowAddUserModal(isOpen); if (!isOpen) setCreateError(null); }}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add New User</DialogTitle>
+            <DialogTitle>Añadir Usuario</DialogTitle>
             <DialogDescription>
-              Enter the details for the new user. A Firebase Auth account will also be created.
+              Introduzca los datos del nuevo usuario.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -252,7 +252,7 @@ export default function UsersPage() {
               <div className="text-destructive text-sm p-2 bg-destructive/10 rounded-md">{createError}</div>
             )}
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name-add" className="text-right">Name</Label>
+              <Label htmlFor="name-add" className="text-right">Nombre</Label>
               <Input id="name-add" value={newName} onChange={(e) => setNewName(e.target.value)} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -260,17 +260,17 @@ export default function UsersPage() {
               <Input id="email-add" type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="password-add" className="text-right">Password</Label>
-              <Input id="password-add" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min. 6 characters" className="col-span-3" />
+              <Label htmlFor="password-add" className="text-right">Contraseña</Label>
+              <Input id="password-add" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min. 6 caracteres" className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="role-add" className="text-right">Role</Label>
+              <Label htmlFor="role-add" className="text-right">Rol</Label>
               <Select value={newUserRole} onValueChange={(value) => setNewUserRole(value as UserRole)}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="seller">Seller</SelectItem>
+                  <SelectItem value="vendedor">Vendedor</SelectItem>
                   <SelectItem value="bodega">Bodega</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
                 </SelectContent>
@@ -278,8 +278,8 @@ export default function UsersPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setShowAddUserModal(false); setCreateError(null); }}>Cancel</Button>
-            <Button type="submit" onClick={handleCreateUser}>Add User</Button>
+            <Button variant="outline" onClick={() => { setShowAddUserModal(false); setCreateError(null); }}>Cancelar</Button>
+            <Button type="submit" onClick={handleCreateUser}>Añadir Usuario</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -289,8 +289,8 @@ export default function UsersPage() {
         <Dialog open={showEditUserModal} onOpenChange={(isOpen) => { if (!isOpen) setEditingUser(null); setShowEditUserModal(isOpen); }}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Edit User: {editingUser.name}</DialogTitle>
-              <DialogDescription>Update the user's details below.</DialogDescription>
+              <DialogTitle>Editar Usario: {editingUser.name}</DialogTitle>
+              <DialogDescription>Actualizar los datos del usuario.</DialogDescription>
             </DialogHeader>
             <UserForm user={editingUser} onSuccess={handleEditFormSuccess} />
           </DialogContent>
@@ -301,12 +301,12 @@ export default function UsersPage() {
       <Dialog open={showConfirmDeleteModal} onOpenChange={setShowConfirmDeleteModal}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogDescription>Are you sure you want to delete this user from the database? This action cannot be undone. Note: This does not delete their Firebase Auth account.</DialogDescription>
+            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogDescription>¿Está seguro de que desea eliminar este usuario de la base de datos? Esta acción no se puede deshacer.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowConfirmDeleteModal(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDeleteConfirm}>Delete from Database</Button>
+            <Button variant="outline" onClick={() => setShowConfirmDeleteModal(false)}>Cancelar</Button>
+            <Button variant="destructive" onClick={handleDeleteConfirm}>Eliminar de la Base de Datos</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

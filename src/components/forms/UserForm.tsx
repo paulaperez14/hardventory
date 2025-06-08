@@ -18,7 +18,7 @@ interface UserFormProps {
 const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
   const [formData, setFormData] = useState<Partial<Pick<FirestoreUser, 'name' | 'role'>>>({
     name: '',
-    role: 'seller', // Default role
+    role: 'vendedor', // Default role
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
     if (user) {
       setFormData({
         name: user.name || '',
-        role: user.role || 'seller',
+        role: user.role || 'vendedor',
       });
     }
   }, [user]);
@@ -48,15 +48,15 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
     setError(null);
 
     if (!user?.id) {
-      setError("User ID is missing. Cannot update user.");
+      setError("Falta el ID de usuario. No se puede actualizar el usuario.");
       setLoading(false);
-      toast({ title: "Update Failed", description: "User ID is missing.", variant: "destructive" });
+      toast({ title: "Actualización fallida", description: "Falta el ID de usuario.", variant: "destructive" });
       return;
     }
     if (!formData.name?.trim()) {
-        setError("Name cannot be empty.");
+        setError("El nombre no puede estar vacío.");
         setLoading(false);
-        toast({ title: "Update Failed", description: "Name cannot be empty.", variant: "destructive" });
+        toast({ title: "Actualización fallida", description: "El nombre no puede estar vacío.", variant: "destructive" });
         return;
     }
 
@@ -73,7 +73,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
       }
     } catch (e: any) {
       setError(e.message);
-      toast({ title: "Update Failed", description: e.message, variant: "destructive" });
+      toast({ title: "Actualización fallida", description: e.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
       </div>
 
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="name-edit" className="text-right">Name</Label>
+        <Label htmlFor="name-edit" className="text-right">Nombre</Label>
         <Input
           id="name-edit"
           name="name"
@@ -107,13 +107,13 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
       </div>
       
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="role-edit" className="text-right">Role</Label>
+        <Label htmlFor="role-edit" className="text-right">Rol</Label>
         <Select value={formData.role} onValueChange={(value) => handleRoleChange(value as UserRole)}>
           <SelectTrigger className="col-span-3">
             <SelectValue placeholder="Select a role" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="seller">Seller</SelectItem>
+            <SelectItem value="vendedor">Vendedor</SelectItem>
             <SelectItem value="bodega">Bodega</SelectItem>
             <SelectItem value="admin">Admin</SelectItem>
           </SelectContent>
@@ -125,7 +125,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSuccess }) => {
           Cancel
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Updating...' : 'Update User'}
+          {loading ? 'Actualizando...' : 'Actualizar Usuario'}
         </Button>
       </div>
     </form>
