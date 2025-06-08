@@ -108,7 +108,7 @@ export default function ProductsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Gestión de productos" description="Gestione su inventario de productos.">
+      <PageHeader title="Gestión de Productos" description="Gestione su inventario de productos.">
         <Button onClick={handleAddClick}>
           <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Producto
         </Button>
