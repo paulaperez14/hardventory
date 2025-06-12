@@ -44,7 +44,6 @@ export async function POST(request: Request) {
       Bucket: bucketName,
       Key: objectKey,
       ContentType: contentType,
-      ACL: 'public-read', // Ensure the object is publicly readable
     });
 
     // La URL pre-firmada permitirá una petición PUT a S3 para el objectKey especificado
@@ -60,10 +59,6 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error('Error generating pre-signed URL:', error);
-    // Check if the error is due to missing s3:PutObjectAcl permission
-    if (error.name === 'AccessDenied' && error.message.includes('PutObjectAcl')) {
-        return NextResponse.json({ error: 'Failed to set public ACL. IAM user might be missing s3:PutObjectAcl permission.', details: error.toString() }, { status: 500 });
-    }
     return NextResponse.json({ error: error.message || 'Failed to generate pre-signed URL', details: error.toString() }, { status: 500 });
   }
 }
