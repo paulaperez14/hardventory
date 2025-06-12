@@ -9,7 +9,7 @@ describe('Gestión de Productos - Editar Producto', () => {
   const editedProductPrice = '175.50';
   const productQuantity = '75';
   const productLowStock = '15';
-  const fixtureImageName = 'taladro.jpg';
+  const fixtureImageName = 'nevera.jpg';
   let editedCategoryName = ''; // To store the name of the category selected during edit
 
   beforeEach(() => {
