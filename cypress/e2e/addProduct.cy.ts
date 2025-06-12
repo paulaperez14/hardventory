@@ -10,7 +10,7 @@ describe('Gestión de Productos - Add Product', () => {
   const productPrice = '99.99';
   const productQuantity = '100';
   const productLowStock = '10';
-  const fixtureImageName = 'cordless_drill.png';
+  const fixtureImageName = 'destornillador.jpg';
 
   beforeEach(() => {
     cy.login('admin@stockpilot.com', 'password');

@@ -7,7 +7,7 @@ describe('Gestión de Productos - Eliminar Producto', () => {
   const productPrice = '49.99';
   const productQuantity = '25';
   const productLowStock = '3';
-  const fixtureImageName = 'cooler.png';
+  const fixtureImageName = 'nevera.jpg';
 
   beforeEach(() => {
     cy.login('admin@stockpilot.com', 'password');
